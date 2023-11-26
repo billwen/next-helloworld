@@ -9,21 +9,24 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
+import {inter} from "@/app/ui/fonts";
+import { unstable_noStore as noStore } from 'next/cache';
 
 export async function fetchRevenue() {
   // Add noStore() here prevent the response from being cached.
   // This is equivalent to in fetch(..., {cache: 'no-store'}).
+  noStore();
 
   try {
     // Artificially delay a response for demo purposes.
     // Don't do this in production :)
 
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    console.log('Fetching revenue data...');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
-    // console.log('Data fetch completed after 3 seconds.');
+    console.log('Data fetch completed after 3 seconds.');
 
     return data.rows;
   } catch (error) {
@@ -33,7 +36,10 @@ export async function fetchRevenue() {
 }
 
 export async function fetchLatestInvoices() {
+  noStore();
   try {
+    await new Promise((resolve) => setTimeout(resolve, 6000));
+
     const data = await sql<LatestInvoiceRaw>`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
       FROM invoices
@@ -53,7 +59,10 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
+  noStore();
   try {
+    await new Promise((resolve) => setTimeout(resolve, 8000));
+
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
@@ -92,6 +101,7 @@ export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,
 ) {
+  noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
@@ -124,6 +134,7 @@ export async function fetchFilteredInvoices(
 }
 
 export async function fetchInvoicesPages(query: string) {
+  noStore();
   try {
     const count = await sql`SELECT COUNT(*)
     FROM invoices
@@ -145,6 +156,7 @@ export async function fetchInvoicesPages(query: string) {
 }
 
 export async function fetchInvoiceById(id: string) {
+  noStore();
   try {
     const data = await sql<InvoiceForm>`
       SELECT
@@ -229,3 +241,25 @@ export async function getUser(email: string) {
     throw new Error('Failed to fetch user.');
   }
 }
+
+interface CountResult {
+  total: number;
+}
+
+export const countQuery = async (query: string) => {
+  try {
+    const total = await sql`${query}`;
+    return Number(total.rows[0].count);
+  } catch (error) {
+    console.error('Failed to fetch user:', error);
+    throw new Error(`Failed to fetch ${query}.`);
+  }
+}
+
+export const invoiceCount = async () => {
+  return countQuery(`SELECT COUNT(*) as total FROM invoices`);
+};
+
+export const customerCount = async () => {
+  return countQuery(`SELECT COUNT(*) as total FROM customers`);
+};
