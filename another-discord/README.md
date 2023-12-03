@@ -3,6 +3,10 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 ## Before Started
 ```bash
 npx create-next-app@13 another-discord --typescript --tailwind --eslint
+
+# Install shadcn-ui
+npx shadcn-ui@latest init
+
 ```
 
 ## Getting Started
