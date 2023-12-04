@@ -1,10 +1,7 @@
 const AuthLayout = ({ children } : { children: React.ReactNode}) => {
   return (
-    <div>
-      <p>Default layout</p>
-      <div>
+    <div className="h-full flex items-center justify-center">
         {children}
-      </div>
     </div>
   );
 };

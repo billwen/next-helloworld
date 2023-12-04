@@ -6,6 +6,7 @@ npx create-next-app@13 another-discord --typescript --tailwind --eslint
 
 # Install shadcn-ui
 npx shadcn-ui@latest init
+npm install --save @clerk/nextjs
 
 ```
 
