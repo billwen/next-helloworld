@@ -11,6 +11,11 @@ npm install --save next-themes
 
 npx shadcn-ui@latest add dropdown-menu
 
+# Database
+npm i -D prisma
+npm install --save @prisma/client
+npx prisma init
+
 ```
 
 ## Getting Started
