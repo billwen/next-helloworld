@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  app:
+    image: 'jotion:latest'
+    container_name: 10008-jotion
+    restart: always
+    ports:
+      - '10008:3000'
+
+networks:
+  default:
+    external: true
+    name: asawingjx
